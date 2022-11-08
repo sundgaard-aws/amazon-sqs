@@ -16,6 +16,7 @@
         {
             var queueService=new QueueService();
             var queueURL=await queueService.GetQueueURL("amazon-sqs-demo");
+            await queueService.PutMessage(queueURL, new Trade{TradeAmount=600000*new Random().Next(), TradeDate=DateTime.Now, TradeGUID=Guid.NewGuid().ToString()});
             await queueService.GetNextMessage(queueURL);
         }
     }
