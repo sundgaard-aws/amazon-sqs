@@ -16,21 +16,22 @@ namespace Amazon.SQS.Demo
             stsClient = new AmazonSecurityTokenServiceClient();
         }
 
-        public async Task<List<Message>> GetNextMessage(string queueURL)
+        public async Task<List<Message>> GetNextMessage(string queueURL, int maxNumberOfMessages=1)
         {
             var request = new ReceiveMessageRequest
             {
                 AttributeNames = new List<string>() { "All" },
-                MaxNumberOfMessages = 5,
+                MaxNumberOfMessages = maxNumberOfMessages,
                 QueueUrl = queueURL,
                 VisibilityTimeout = (int)TimeSpan.FromMinutes(10).TotalSeconds,
-                WaitTimeSeconds = (int)TimeSpan.FromSeconds(5).TotalSeconds
+                WaitTimeSeconds = (int)TimeSpan.FromSeconds(5).TotalSeconds                
             };
 
             var response = await client.ReceiveMessageAsync(request);
+            Console.WriteLine($"Messages received was [{response.Messages.Count}]");
             if (response.Messages.Count > 0)
             {
-                foreach (var message in response.Messages) PrintMessageDetails(message);
+                //foreach (var message in response.Messages) PrintMessageDetails(message);
             }
             else Console.WriteLine("No messages received.");
             return response.Messages;
