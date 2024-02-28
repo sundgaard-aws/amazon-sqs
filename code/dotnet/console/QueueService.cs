@@ -16,7 +16,7 @@ namespace Amazon.SQS.Demo
             stsClient = new AmazonSecurityTokenServiceClient();
         }
 
-        public async Task<List<Message>> GetNextMessage(string queueURL, int maxNumberOfMessages=1)
+        public async Task<List<Message>> GetNextMessages(string queueURL, int maxNumberOfMessages=1)
         {
             var request = new ReceiveMessageRequest
             {
@@ -35,6 +35,11 @@ namespace Amazon.SQS.Demo
             }
             else Console.WriteLine("No messages received.");
             return response.Messages;
+        }
+
+        internal void DeleteMessage(string queueUrl, string receiptHandle)
+        {
+            client.DeleteMessageAsync(queueUrl, receiptHandle);
         }
 
         public async Task PutMessage(string queueURL, object message)
